@@ -179,3 +179,155 @@ cd my_project
 git init
 ```
 Это лишь некоторые функции markdown.
+
+# Практическая работа 2. Дополняем шпаргалку
+
+## Хеш — идентификатор коммита
+
+* Git преобразует информацию о коммитах с помощью алгоритма SHA-1 и для каждого из них рассчитывает уникальный идентификатор — хеш.
+* Хеш — основной идентификатор коммита и позволяет узнать его автора, дату и содержимое закоммиченных файлов.
+* Все хеши, а также таблицу соответствий хеш → информация о коммите Git хранит в папке .git.
+
+## Исследуем лог
+
+Разберём элементы, из которых состоит описание:
+* строка из цифр и латинских букв после слова commit — это хеш коммита;
+* Author — имя автора и его электронная почта;
+* Date — дата и время создания коммита;
+* в конце находится сообщение коммита.
+
+### Получить сокращённый лог 
+```— git log --oneline
+```
+
+В сокращённом логе выводятся сокращённые хеши — их можно использовать точно так же, как и полные.
+
+# HEAD
+
+```$ pwd # посмотрели, где мы
+/Users/user/dev/first-project
+
+$ cd .git/
+$ ls # посмотрели, какие есть файлы
+COMMIT_EDITMSG  ORIG_HEAD  description  index  logs/     refs/
+HEAD            config     hooks/       info/  objects/
+
+$ cat HEAD # команда cat показывает содержимое файла
+ref: refs/heads/master # в файле вот такая ссылка
+```
+
+```$ cat refs/heads/master # взяли ссылку из файла HEAD
+# внутри хеш
+e007f5035f113f9abca78fe2149c593959da5eb7
+
+$ git log 
+# сверяем с хешем последнего коммита
+commit e007f5035f113f9abca78fe2149c593959da5eb7
+Author: John Doe <johndoe@example.com>
+Date:   Tue Mar 28 00:26:53 2023 +0300
+
+    Добавить амбиций в список дел
+
+... # другие коммиты
+```
+
+###### Папка .git содержит много непонятных файлов — об одном из них мы рассказали в этом уроке. Подытожим:
+В числе прочих файлов в папке .git есть служебный файл HEAD. Он указывает на самый свежий коммит.
+Вместо хеша последнего коммита можно написать слово HEAD — Git вас поймёт.
+
+# Статусы файлов в Git
+
+### Важное:
+* Статусом untracked помечается файл, о существовании которого Git знает, но не следит за изменениями в нём. Этот статус — противоположность tracked, в который попадают все файлы, отслеживаемые Git.
+* Файл переходит в статус staged после выполнения git add.
+* Статус modified означает, что файл был изменён.
+* Большинство файлов в проектах «шагает» по следующему циклу: «изменён» → «добавлен в список на коммит» → «закоммичен» → «изменён» → и так далее.
+
+# Как читать git status
+
+```$ cd ~/dev
+$ mkdir git-status-lesson
+$ cd git-status-lesson
+$ git init
+# тут Git выведет что-нибудь, но мы это пропустим
+$ touch README.md
+$ git add README.md
+$ git commit -m 'Добавить README'
+~~~~# по традиции первым создадим и закоммитим файл README.md
+```
+
+```$ git status
+On branch master
+nothing to commit, working tree clean 
+```
+
+```$ touch fileA.txt
+$ git status
+On branch master
+Untracked files: # найдены неотслеживаемые файлы
+  (use "git add <file>..." to include in what will be committed)
+        fileA.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+```$ git add fileA.txt 
+$ git status
+On branch master
+Changes to be committed: # новая секция
+  (use "git restore --staged <file>..." to unstage)
+        new file:   fileA.txt
+```
+
+```$ git commit -m 'Добавить файл fileA.txt'
+# тут будет вывод комманды commit, он нас не интересует
+$ git status
+On branch master
+nothing to commit, working tree clean
+```
+
+```# внесли в fileA.txt правки
+# запросили статус
+$ git status 
+On branch master
+Changes not staged for commit: # ещё одна секция
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   fileA.txt
+```
+```$ git add fileA.txt
+$ git status
+On branch master
+Changes to be committed: # все изменения готовы к коммиту
+  (use "git restore --staged <file>..." to unstage)
+        modified:   fileA.txt
+```
+```# изменили fileA.txt
+$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+          modified:   fileA.txt
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+          modified:   fileA.txt
+```
+---
+* tracked
+Файл есть в папке, но не указан ни в staged, ни в untracked. Это значит, что его когда-то закоммитили и с тех пор не меняли.
+* tracked
+Все файлы из staged являются tracked.
+* staged
+Файл указан в списке Changes to be committed
+* untracked
+Да, файл в списке Untracked files.
+* tracked
+Файл указан в списке Untracked files, а значит, не может быть tracked.
+* modified
+Файла нет в списке Changes not staged for commit.
+---
+## Подытожим то, о чём рассказали в уроке:
+* Команда git status всегда подскажет, что происходит с файлом: например, он добавлен в список «на коммит» или ещё вообще не отслеживается, или изменён.
+* git status показывает явно следующие состояния файлов: untracked, staged и modified.
+* git status подсказывает, какие команды можно выполнить, чтобы поменять состояние файла.
