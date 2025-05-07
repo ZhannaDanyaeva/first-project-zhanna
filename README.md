@@ -40,8 +40,8 @@ $ git add --all
 
 # Делаем первый коммит
 
-```$ git commit -m ‘Мой первый коммит!‘
-```
+$ git commit -m ‘Мой первый коммит!‘
+
 
 
 # Просматриваем историю коммитов
@@ -66,11 +66,10 @@ $ ssh-keygen -t rsa -b 4096 -C "электронная почта, к котор
 > Enter passphrase (empty for no passphrase): [Type a passphrase]
 > Enter same passphrase again: [Type passphrase again]
 
-ls -a ~/.ssh```
+ls -a ~/.ssh
 
-# Привязываем SSH-ключ к GitHub
-
-```# скопировать содержимое ключа в буфер обмена:
+#### Привязываем SSH-ключ к GitHub
+# скопировать содержимое ключа в буфер обмена:
 $ pbcopy < ~/.ssh/id_rsa.pub
 # для ed25519:
 $ pbcopy < ~/.ssh/id_ed25519.pub
