@@ -1,6 +1,6 @@
 # Инициализируем репозиторий
 
-$ cd ~/dev/first-project # перешли в нужную папку
+```$ cd ~/dev/first-project # перешли в нужную папку
 
 $ git init # создали репозиторий
 
@@ -14,14 +14,14 @@ $ rm -rf .git # удалили подпапку .git```
 
 ```$ touch todo.txt
 $ touch readme.txt
-# создали файлы todo.txt и readme.txt```
+# создали файлы todo.txt и readme.txt
 
-```$ git status # проверили статус```
+$ git status # проверили статус
 
-```$ git add --all # подготовили к сохранению все файлы в репозитории
+$ git add --all # подготовили к сохранению все файлы в репозитории
 
 
-$ git status # проверили статус```
+$ git status # проверили статус
 
 $ git add todo.txt
 $ git add readme.txt
@@ -33,6 +33,8 @@ $ git status
 $ git add todo.txt
 # или
 $ git add --all```
+
+---
 
 # Делаем первый коммит
 
